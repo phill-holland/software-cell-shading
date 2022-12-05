@@ -1,6 +1,8 @@
-<b>Pacman</b>
+<b>Software Cell Shading With Perlin Noise Vertex Lines</b>
 
-This application allows the compilation and execution of a simple Java Clone of Pacman.
+This application allows the compilation and execution of a simple cell shading and perlin noise example, for the edges of the sample 3D cube.
+
+It uses entirely software rendering, including lighting, camera movements and texture rasterisation (not perspectively correct!)
 
 It is a resurrection of an old Java Applet codebase!
 
@@ -33,7 +35,7 @@ mvn package
 To Run (via terminal);
 
 ```
-java -cp target/pacman-1.0-SNAPSHOT.jar com.phillholland.app.App
+java -cp target/software-cell-shading-1.0-SNAPSHOT.jar com.phillholland.app.App
 ```
 
 
