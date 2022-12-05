@@ -1,12 +1,13 @@
+package com.phillholland.app;
 
-public class globals
+public class Globals
 {
-	public static sine Sine = new sine();
-	public static cosine Cosine = new cosine();
+	public static Sine Sine = new Sine();
+	public static Cosine Cosine = new Cosine();
 
-	public static matrix yMatrix(float a)
+	public static Matrix yMatrix(float a)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		result.add(0, 0, (float)Cosine.get(a));
 		result.add(2, 0, -(float)Sine.get(a));
@@ -19,9 +20,9 @@ public class globals
 		return result;
 	}
 
-	public static matrix xMatrix(float a)
+	public static Matrix xMatrix(float a)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		result.add(1, 1, (float)Cosine.get(a));
 		result.add(2, 1, (float)Sine.get(a));
@@ -33,9 +34,9 @@ public class globals
 		return result;
 	}
 
-	public static matrix zMatrix(float a)
+	public static Matrix zMatrix(float a)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		result.add(0, 0, (float)Cosine.get(a));
 		result.add(1, 0, (float)Sine.get(a));
@@ -47,9 +48,9 @@ public class globals
 		return result;
 	}
 
-	public static matrix tMatrix(point v)
+	public static Matrix tMatrix(Point v)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		for (int x = 0; x < 3; x++) result.add(x, x, 1.0f);
 
@@ -58,9 +59,9 @@ public class globals
 		return result;
 	}
 
-	public static matrix sMatrix(point v)
+	public static Matrix sMatrix(Point v)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		result.add(0, 0, v.x);
 		result.add(1, 1, v.y);

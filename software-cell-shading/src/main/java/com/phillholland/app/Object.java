@@ -1,45 +1,43 @@
-import java.awt.image.*;
-import java.awt.*;
+package com.phillholland.app;
 
-public class object
+public class Object
 {
-	public point points[] = null;
-	public point temp[] = null;
+	public Point points[] = null;
+	public Point temp[] = null;
 
-	public vector normals[] = null;
+	public Vector normals[] = null;
 
-	public polygon polygons[] = null;
+	public Polygon polygons[] = null;
 	
 	public int[][] sharedByPolygon = null;
 	public int[][] sharedByVertex = null;
 
-	public edge edges[] = null;
+	public Edge edges[] = null;
 
-	public colour lighting[] = null;
+	public Colour lighting[] = null;
 
 	public int totalEdges = 0;
-
-	// need shared vertex list, polygon n shares vertices with polygon x
-	public object(int total_points,int total_polygons)
+	
+	public Object(int total_points,int total_polygons)
 	{
-		points = new point[total_points];
-		temp = new point[total_points];
-		normals = new vector[total_points];
-		lighting = new colour[total_points];
+		points = new Point[total_points];
+		temp = new Point[total_points];
+		normals = new Vector[total_points];
+		lighting = new Colour[total_points];
 
 		for (int i = 0; i < total_points; i++)
 		{
-			points[i] = new point();
-			temp[i] = new point();
-			normals[i] = new vector();
-			lighting[i] = new colour();
+			points[i] = new Point();
+			temp[i] = new Point();
+			normals[i] = new Vector();
+			lighting[i] = new Colour();
 		}
 
-		polygons = new polygon[total_polygons];
+		polygons = new Polygon[total_polygons];
 
 		for (int i = 0; i < polygons.length; i++)
 		{
-			polygons[i] = new polygon(points,normals,lighting);
+			polygons[i] = new Polygon(points,normals,lighting);
 		}
 
 		sharedByPolygon = new int[total_polygons][total_polygons];
@@ -95,7 +93,6 @@ public class object
 		}
 
 		// ***
-		//System.out.println("shared by vertex");
 
 		for (int i = 0; i < points.length; i++)
 		{
@@ -111,8 +108,6 @@ public class object
 					{
 						if (!inserted)
 						{
-							//System.out.println(" i " + i + " j " + j);
-
 							sharedByVertex[i][position] = j;
 							++position;
 							inserted = true;
@@ -123,15 +118,13 @@ public class object
 		}
 
 		int count = 0;
-		//int maxEdge = 0;
 
 		for (int i = 0; i < polygons.length; i++)
 		{
 			count += polygons[i].indices.length;
-			//if (polygons[i].indices.length > maxEdge) maxEdge = polygons[i].indices.length;
 		}
 
-		edges = new edge[count];
+		edges = new Edge[count];
 		totalEdges = 0;
 
 		for (int i = 0; i < polygons.length; i++)
@@ -141,7 +134,6 @@ public class object
 			for (int idx = 0; idx < polygons[i].indices.length; idx++)
 			{
 				int b = polygons[i].indices[polygons[i].inc(idx)];
-				//System.out.println("check (a,b) (" + a + "," + b + ")");
 				boolean found = false;
 
 				int j = 0;
@@ -164,40 +156,33 @@ public class object
 
 				if (!found)
 				{
-					edges[totalEdges] = new edge(a, b, polygons.length);
+					edges[totalEdges] = new Edge(a, b, polygons.length);
 					edges[totalEdges].add(i);
 
-					//System.out.println("(a,b) (" + a + "," + b + ")");
-					//System.out.println("inserted");
 					++totalEdges;
 				}				
 
 				a = b;
 			}
 		}
-
-		//System.out.println("totaledges " + totalEdges);
 	}
 
 	
 	public void normals()
 	{
-		//System.out.println("normals");
 		for (int j = 0; j < polygons.length; j++) 
 		{ 
 			polygons[j].normal();
-			//polygons[j]._normal.display();
 		}
 
 		for (int i = 0; i < temp.length; i++)
 		{
-			vector normal = new vector(0.0f, 0.0f, 0.0f);
+			Vector normal = new Vector(0.0f, 0.0f, 0.0f);
 			float total = 0.0f;
 			for (int j = 0; j < polygons.length; j++)
 			{
 				if (sharedByVertex[i][j] != -1)
 				{
-					//System.out.println("i " + i + " j " + j);
 					int index = sharedByVertex[i][j];
 
 					normal.x += polygons[index]._normal.x;
@@ -214,9 +199,8 @@ public class object
 		}
 	}
 
-	public void compute(light _light)
+	public void compute(Light _light)
 	{
-		//System.out.println("start");
 		for (int i = 0; i < normals.length; i++)
 		{
 			float x = temp[i].x - _light.position.x;
@@ -237,24 +221,13 @@ public class object
 
 			normals[i].w = v;
 
-			//normals[i].display();
-			//System.out.println("light (" + i + ") (" + v + "),intensity(" + intensity + "),distance(" + distance + ")");
-
 			lighting[i].red = _light._colour.red * v;
 			lighting[i].green = _light._colour.green * v;
 			lighting[i].blue = _light._colour.blue * v;			
 		}
-
-		/*
-		for (int i = 0; i < normals.length; i++)
-		{
-			 normals[i].w = _light.direction.dot(normals[i]);
-			 normals[i].w = (normals[i].w + 3.0f) / 6.0f;
-		}
-		*/
 	}
 
-	public void backfaces(point cameraPosition)
+	public void backfaces(Point cameraPosition)
 	{
 		for (int i = 0; i < polygons.length; i++)
 		{
@@ -275,47 +248,25 @@ public class object
 		}
 	}
 
-	public void transform(matrix m)
+	public void transform(Matrix m)
 	{
 		for (int i = 0; i < temp.length; i++)
 		{
-			matrix mp = temp[i].get();
-			matrix result = mp.multiply(m);
+			Matrix mp = temp[i].get();
+			Matrix result = mp.multiply(m);
 			temp[i].set(result);
 		}
 	}
 
-	public void transform(camera c)
+	public void transform(Camera c)
 	{
 		for (int i = 0; i < temp.length; i++)
 		{
-			//System.out.print("before ");
-			//temp[i].display();
 			temp[i].copy(temp[i].transform(c));
-			//System.out.print("after ");
-			//temp[i].display();
 		}
 	}
 
-	/*
-	public void paint(pixelBuffer16 pb)
-	{
-		for (int i = 0; i < polygons.length; i++)
-		{
-			if(!polygons[i].backface) polygons[i].paint(pb);
-		}
-	}
-
-	public void paint(pixelBuffer16 pb,line l)
-	{
-		for (int i = 0; i < polygons.length; i++)
-		{
-			if (!polygons[i].backface) polygons[i].paint(pb,l);
-		}
-	}
-	*/
-
-	public void paint(pixelBuffer16 pb, line n)
+	public void paint(PixelBuffer16 pb, Line n)
 	{
 		for (int i = 0; i < polygons.length; i++)
 		{
@@ -324,8 +275,8 @@ public class object
 
 		for (int i = 0; i < totalEdges; i++)
 		{
-			edge e = edges[i];
-			point a = temp[e.a]; point b = temp[e.b];
+			Edge e = edges[i];
+			Point a = temp[e.a]; Point b = temp[e.b];
 
 			int count = 0;
 			for (int j = 0; j < e.length; j++)
@@ -333,7 +284,6 @@ public class object
 				if (polygons[e.polygons[j]].backface) count++;
 			}
 
-			//if ((count < e.length)&&(count>0))
 			if (count < e.length)
 			{
 				n.noiseIncX = e.seedX;

@@ -1,5 +1,6 @@
+package com.phillholland.app;
 
-public class catmull
+public class Catmull
 {
 	private boolean finished;
 	private float currentPosition;
@@ -7,17 +8,17 @@ public class catmull
 
 	private int endIndex = -1;
 
-	private point[] points = null;
+	private Point[] points = null;
 
-	private point endCondition = null;
+	private Point endCondition = null;
 
 	public float speed;
 
-	public colour _colour = new colour(0.0f, 0.0f, 0.0f);
+	public Colour _colour = new Colour(0.0f, 0.0f, 0.0f);
 
 	public int width = 1;
 
-	public catmull(point[] c)
+	public Catmull(Point[] c)
 	{
 		if (c.length >= 4)
 		{
@@ -28,7 +29,7 @@ public class catmull
 		reset();
 	}
 
-	public catmull(point[] c,point stopCondition)
+	public Catmull(Point[] c,Point stopCondition)
 	{
 		if (c.length >= 4)
 		{
@@ -37,8 +38,8 @@ public class catmull
 		}
 
 		reset();
-		//endIndex = endIdx;
-		endCondition = new point();
+		
+		endCondition = new Point();
 		endCondition.copy(stopCondition);
 	}
 
@@ -52,12 +53,12 @@ public class catmull
 		finished = false;
 	}
 
-	public point get()
+	public Point get()
 	{
 		float time2 = currentPosition * currentPosition;
 		float time3 = currentPosition * currentPosition * currentPosition;
 
-		point result = new point();
+		Point result = new Point();
 
 		result.x = (2.0f * points[inc(positionIndex, 1)].x) + (-points[positionIndex].x + points[inc(positionIndex, 2)].x) * currentPosition;
 		result.x += (2.0f * points[positionIndex].x - 5.0f * points[inc(positionIndex, 1)].x + 4.0f * points[inc(positionIndex, 2)].x - points[inc(positionIndex, 3)].x) * time2;
@@ -73,41 +74,19 @@ public class catmull
 
 		if (currentPosition >= 1.0f)
 		{
-			//if (inc(positionIndex, 1) == points.length - 1)
-			if (count > endIndex)//points.length / 2)
+			if (count > endIndex)
 			{
-				result = new point(-1.0f, -1.0f, -1.0f);
+				result = new Point(-1.0f, -1.0f, -1.0f);
 				finished = true;
 
-				//System.out.println("fin");
 				return result;
 			}
-			/*else
-			{
-				int t = points.length / 2;
-				if ((((int)result.x) == (int)points[t - 1].x) && (((int)result.y) == (int)points[t - 1].y))
-				{
-					result = new point(-1.0f, -1.0f, -1.0f);
-					finished = true;
-
-					System.out.println("DONE ");
-					return result;
-				}
-			}*/
 
 			currentPosition = 0.0f;
 			positionIndex = inc(positionIndex, 1);
 
-			//System.out.println("count " + count);
 			++count;
 		}
-		//System.out.println("RESULT " + result.x + "," + result.y);
-		//System.out.println("end point " + points[points.length - 1].x + "," + points[points.length - 1].y);
-		/*if ((((int)result.x) == (int)points[points.length - 1].x) && (((int)result.y) == (int)points[points.length - 1].y))
-		{
-			System.out.println("finished");
-			finished = true;
-		}*/
 
 		return result;
 	}
@@ -115,7 +94,7 @@ public class catmull
 	protected int inc(int i, int n)
 	{
 		int result = i + n;
-		if (result >= points.length) result = result - points.length;//i - points.Length - 1;
+		if (result >= points.length) result = result - points.length;
 
 		return result;
 	}
@@ -130,63 +109,30 @@ public class catmull
 
 	public boolean isFinished() { return finished; }
 
-	public void render(pixelBuffer16 pb)
+	public void render(PixelBuffer16 pb)
 	{
-		//System.out.println("START");
 		int previousx, previousy;
 		boolean end = false;
 
-		//point t = get();
-		previousx = (int)points[0].x;//(int)t.x;
-		previousy = (int)points[0].y;//(int)t.y;
+		previousx = (int)points[0].x;
+		previousy = (int)points[0].y;
 	
 		do
 		{
-			point t = get();
+			Point t = get();
 			if (!isFinished())
 			{
 				int x = (int)t.x;
 				int y = (int)t.y;
 
 
-				//pb.line(previousx, previousy, x, y, 255, 255, 0, 0, 2);
 				pb.line(previousx, previousy, x, y, 255, (int)_colour.red, (int)_colour.green, (int)_colour.blue, width);
 
 				if (endCondition != null) if ((x == (int)endCondition.x) && (y == (int)endCondition.y)) end = true;
-				//System.out.println("line(" + previousx + "," + previousy + "," + x + "," + y + ")");
+
 				previousx = x;
 				previousy = y;
 			}
 		} while ((!isFinished()) && (!end));		
 	}
-	/*
-	public void render(pixelBuffer16 pb)
-	{
-		//System.out.println("START");
-		int previousx, previousy;
-		boolean end = false;
-
-		//point t = get();
-		previousx = (int)points[0].x;//(int)t.x;
-		previousy = (int)points[0].y;//(int)t.y;
-
-		do
-		{
-			point t = get();
-			if (!isFinished())
-			{
-				int x = (int)t.x;
-				int y = (int)t.y;
-
-
-				pb.line(previousx, previousy, x, y, 255, 0, 0);
-				
-				if(endCondition!=null) if ((x == (int)endCondition.x) && (y == (int)endCondition.y)) end = true;
-				//System.out.println("line(" + previousx + "," + previousy + "," + x + "," + y + ")");
-				previousx = x;
-				previousy = y;
-			}
-		} while ((!isFinished())&&(!end));
-	}
-	 * */
 };

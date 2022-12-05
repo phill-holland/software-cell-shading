@@ -1,12 +1,10 @@
-import java.awt.*;
-import java.applet.*;
-import java.awt.image.*;
+package com.phillholland.app;
 
-public class matrix
+public class Matrix
 {
 	public float m[][] = new float[4][4];
 
-	public matrix() { reset(); }
+	public Matrix() { reset(); }
 
 	public void reset()
 	{
@@ -38,15 +36,14 @@ public class matrix
 
 	public float get(int x, int y) { return m[x][y]; }
 
-	public vector multiply(vector src)
+	public Vector multiply(Vector src)
 	{
-		vector t = new vector(src.x * m[0][0] + src.y * m[0][1] + src.z * m[0][2] + src.w * m[0][3], src.x * m[1][0] + src.y * m[1][1] + src.z * m[1][2] + src.w * m[1][3], src.x * m[2][0] + src.y * m[2][1] + src.z * m[2][2] + src.w * m[2][3], src.x * m[3][0] + src.y * m[3][1] + src.z * m[3][2] + src.w * m[3][3]);
-		return t;
+		return new Vector(src.x * m[0][0] + src.y * m[0][1] + src.z * m[0][2] + src.w * m[0][3], src.x * m[1][0] + src.y * m[1][1] + src.z * m[1][2] + src.w * m[1][3], src.x * m[2][0] + src.y * m[2][1] + src.z * m[2][2] + src.w * m[2][3], src.x * m[3][0] + src.y * m[3][1] + src.z * m[3][2] + src.w * m[3][3]);
 	}
 
-	public matrix multiply(matrix r)
+	public Matrix multiply(Matrix r)
 	{
-		matrix result = new matrix();
+		Matrix result = new Matrix();
 
 		for (int y = 0; y < 4; y++)
 		{
@@ -56,13 +53,6 @@ public class matrix
 				result.m[x][y] += m[x][1] * r.m[1][y];
 				result.m[x][y] += m[x][2] * r.m[2][y];
 				result.m[x][y] += m[x][3] * r.m[3][y];
-
-				/*
-				 * 		result.m[offset] += m[y] * r.m[(x * 4)];
-				result.m[offset] += m[4 + y] * r.m[(x * 4) + 1];
-				result.m[offset] += m[8 + y] * r.m[(x * 4) + 2];
-				result.m[offset] += m[12 + y] * r.m[(x * 4) + 3];
-				 * */
 			}
 		}
 
@@ -86,9 +76,9 @@ public class matrix
 		}
 	}
 
-	public matrix inverse() { matrix result = new matrix(); return result; }
+	public Matrix inverse() { Matrix result = new Matrix(); return result; }
 
-	public void copy(matrix r)
+	public void copy(Matrix r)
 	{
 		for (int x = 0; x < 4; x++)
 		{

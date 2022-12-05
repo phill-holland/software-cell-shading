@@ -1,14 +1,14 @@
-import java.awt.*;
-import java.applet.*;
+package com.phillholland.app;
+
 import java.awt.image.*;
 
-public class texture
+public class Texture
 {
 	public float width,height;
 	public int pixels[];
 	public int max;
 
-	public texture(Image i,int w,int h)
+	public Texture(BufferedImage i,int w,int h)
 	{
 	
 		width = (float)w;
@@ -30,7 +30,7 @@ public class texture
 		
 	}
 
-	public colour get(float u,float v)
+	public Colour get(float u,float v)
 	{
 		int y = (int)(v * (height - 1.0f));
 		int x = (int)(u * (width - 1.0f));
@@ -51,7 +51,7 @@ public class texture
 		}
 
 
-		return new colour(red,green,blue,alpha);
+		return new Colour(red,green,blue,alpha);
 		
 	}	
 }

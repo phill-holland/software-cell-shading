@@ -1,51 +1,42 @@
+package com.phillholland.app;
 
-public class polygon
+public class Polygon
 {
-	public point points[] = null;
+	public Point points[] = null;
 	public int indices[] = null;
 
-	public map mappings[] = null;
+	public Map mappings[] = null;
 	public int textureIndices[] = null;
 
-	public vector normals[] = null;
+	public Vector normals[] = null;
 
-	public texture _textures[] = null;
-
-	//public boolean edge[] = null;
+	public Texture _textures[] = null;
 
 	public boolean backface = false;
 
-	public vector _normal = new vector(0.0f,0.0f,0.0f);
+	public Vector _normal = new Vector(0.0f,0.0f,0.0f);
 
-	public colour lighting[] = null;
+	public Colour lighting[] = null;
 
 	public float tonalMap[][] = null;
 
-	public polygon() { }
+	public Polygon() { }
 
 	
-	public polygon(point p[], vector n[])//, int i[])
+	public Polygon(Point p[], Vector n[])
 	{
 		normals = n;
 		reset(p, null, null, null);		
 	}
 
-	public polygon(point p[], vector n[], colour c[])
+	public Polygon(Point p[], Vector n[], Colour c[])
 	{
 		normals = n;
 		lighting = c;
 		reset(p, null, null, null);
 	}
 
-	/*
-	public void reset(point[] p,int i[])
-	{
-		points = p;
-		if(i!=null) indices = i.clone();
-	}
-    */
-
-	public void reset(point[] p, int i[], map[] m, int ti[])
+	public void reset(Point[] p, int i[], Map[] m, int ti[])
 	{
 		points = p;
 		mappings = m;
@@ -54,32 +45,28 @@ public class polygon
 		if (ti != null) textureIndices = ti.clone();
 	}
 
-	public vector normal()
+	public Vector normal()
 	{
-		point left = points[indices[dec(0)]];
-		point right = points[indices[inc(0)]];
-		point center = points[indices[0]];
+		Point left = points[indices[dec(0)]];
+		Point right = points[indices[inc(0)]];
+		Point center = points[indices[0]];
 
-		vector a = new vector(center.x, center.y, center.z, 0.0f);
-		vector b = new vector(a.x - right.x, a.y - right.y, a.z - right.z, 0.0f);
-		vector c = new vector(a.x - left.x, a.y - left.y, a.z - left.z, 0.0f);
-
-		//b = b.normalise();
-		//c = c.normalise();
+		Vector a = new Vector(center.x, center.y, center.z, 0.0f);
+		Vector b = new Vector(a.x - right.x, a.y - right.y, a.z - right.z, 0.0f);
+		Vector c = new Vector(a.x - left.x, a.y - left.y, a.z - left.z, 0.0f);
 
 		_normal = b.cross(c).normalise();
 		
 		return _normal;
 	}
 
-	public boolean isBackface(point cameraPosition)
+	public boolean isBackface(Point cameraPosition)
 	{
-		point a = points[indices[0]];
-		vector n = _normal;//normal();
+		Point a = points[indices[0]];
+		Vector n = _normal;
 		
-		vector sight = new vector(a.x - cameraPosition.x, a.y - cameraPosition.y, a.z - cameraPosition.z).normalise();
+		Vector sight = new Vector(a.x - cameraPosition.x, a.y - cameraPosition.y, a.z - cameraPosition.z).normalise();
 
-		//float result = n.dot(new vector(points[indices[0]].x - los.x, points[indices[0]].y - los.y, points[indices[0]].z - los.z, 0.0f));
 		float result = n.dot(sight);
 		if (result > 0.0f) { backface = false; return false; }
 
@@ -88,7 +75,7 @@ public class polygon
 		return true;
 	}
 
-	public void copy(polygon src)
+	public void copy(Polygon src)
 	{
 		points = src.points;
 		indices = src.indices.clone();
@@ -109,40 +96,8 @@ public class polygon
 
 		return result;
 	}
-
-	/*
-	public void paint(pixelBuffer16 pb)
-	{
-		point a = points[indices[0]];
-
-		for (int i = 0; i < indices.length; i++)
-		{
-			point b = points[indices[inc(i)]];
-
-			pb.line((int)a.x, (int)a.y, (int)b.x, (int)b.y, 255, 0, 0);
-
-			//System.out.println("line (" + a.x + "," + a.y + ")(" + b.x + "," + b.y + ")");
-			a = b;
-		}
-	}
-
-	public void paint(pixelBuffer16 pb, line n)
-	{
-		point a = points[indices[0]];
-
-		for (int i = 0; i < indices.length; i++)
-		{
-			point b = points[indices[inc(i)]];
-			
-			n.noiseIncX = 0.0f; n.noiseIncY = 0.0f;
-			//n.draw(pb, new point(a.x, a.y), new point(b.x, b.y));
-			n.draw(pb, a, b);
-						
-			a = b;
-		}
-	}
-	*/
-	public void paint(pixelBuffer16 pb)
+	
+	public void paint(PixelBuffer16 pb)
 	{
 		float lightOffset = 0.0f;
 
@@ -161,8 +116,8 @@ public class polygon
 
 			boolean finished;
 
-			point top = null, bottom = null, current = null, left = null, right = null, topLeft = null, topRight = null;
-			map mapTopLeft = null, mapTopRight = null, mapLeft = null, mapRight = null;
+			Point top = null, bottom = null, current = null, left = null, right = null, topLeft = null, topRight = null;
+			Map mapTopLeft = null, mapTopRight = null, mapLeft = null, mapRight = null;
 
 			for (int i = 0; i < indices.length; i++)
 			{
@@ -190,7 +145,7 @@ public class polygon
 				if ((int)(left.y) == (int)(top.y))
 				{
 					int t = dec(leftIndex);
-					point tp = points[indices[t]];
+					Point tp = points[indices[t]];
 
 					count++;
 					if ((int)(tp.y) == (int)(top.y)) leftIndex = t;
@@ -214,7 +169,7 @@ public class polygon
 				if ((int)(right.y) == (int)(top.y))
 				{
 					int t = inc(rightIndex);
-					point tp = points[indices[t]];
+					Point tp = points[indices[t]];
 
 					count++;
 					if ((int)(tp.y) == (int)(top.y)) rightIndex = t;
@@ -238,19 +193,17 @@ public class polygon
 			left = points[indices[leftIndex]];
 			right = points[indices[rightIndex]];
 
-			//System.out.println("(tl,tr,l,r) (" + topLeftIndex + "," + topRightIndex + "," + leftIndex + "," + rightIndex + ")");
-
 			mapTopLeft = mappings[textureIndices[topLeftIndex]];
 			mapTopRight = mappings[textureIndices[topRightIndex]];
 			mapLeft = mappings[textureIndices[leftIndex]];
 			mapRight = mappings[textureIndices[rightIndex]];
 
 			// ***
-			colour topLeftLight = lighting[indices[topLeftIndex]];
-			colour leftLight = lighting[indices[leftIndex]];
+			Colour topLeftLight = lighting[indices[topLeftIndex]];
+			Colour leftLight = lighting[indices[leftIndex]];
 
-			colour topRightLight = lighting[indices[topRightIndex]];
-			colour rightLight = lighting[indices[rightIndex]];
+			Colour topRightLight = lighting[indices[topRightIndex]];
+			Colour rightLight = lighting[indices[rightIndex]];
 	
 			float topLeftLight_W = normals[indices[topLeftIndex]].w;
 			float leftLight_W = normals[indices[leftIndex]].w;
@@ -260,7 +213,7 @@ public class polygon
 
 			// ***
 
-			colour leftLightGradient = new colour(), rightLightGradient = new colour();
+			Colour leftLightGradient = new Colour(), rightLightGradient = new Colour();
 
 			leftLightGradient.red = (topLeftLight.red - leftLight.red) / (topLeft.y - left.y);
 			leftLightGradient.green = (topLeftLight.green - leftLight.green) / (topLeft.y - left.y);
@@ -272,9 +225,6 @@ public class polygon
 
 			float leftLightGradient_W = (topLeftLight_W - leftLight_W) / (topLeft.y - left.y);
 			float rightLightGradient_W = (topRightLight_W - rightLight_W) / (topRight.y - right.y);
-
-			//System.out.println("tl(" + mapTopLeft.u + "," + mapTopLeft.v + ") tr(" + mapTopRight.u + "," + mapTopRight.v + ")");
-			//System.out.println("l(" + mapLeft.u + "," + mapLeft.v + ") r(" + mapRight.u + "," + mapRight.v + ")");
 						
 			float leftGradient = (topLeft.x - left.x) / (topLeft.y - left.y);
 			float rightGradient = (topRight.x - right.x) / (topRight.y - right.y);
@@ -286,7 +236,7 @@ public class polygon
 			float rightVGradient = (mapTopRight.v - mapRight.v) / (topRight.y - right.y);
 			
 			int yInt = (int)top.y;
-			int height = ((int)bottom.y - (int)top.y);// - 1;
+			//int height = ((int)bottom.y - (int)top.y);// - 1;
 
 			finished = false;
 			do
@@ -297,17 +247,17 @@ public class polygon
 				int startx = (int)(topLeft.x) + (int)(((float)((int)(y) - (int)(topLeft.y)) * leftGradient));
 				int endx = (int)(topRight.x) + (int)(((float)((int)(y) - (int)(topRight.y)) * rightGradient));
 
-				float startu = (mapTopLeft.u + ((y - topLeft.y) * leftUGradient));// * t.width;
-				float endu = (mapTopRight.u + ((y - topRight.y) * rightUGradient));// * t.width;
+				float startu = (mapTopLeft.u + ((y - topLeft.y) * leftUGradient));
+				float endu = (mapTopRight.u + ((y - topRight.y) * rightUGradient));
 
-				float startv = (mapTopLeft.v + ((y - topLeft.y) * leftVGradient));//* t.height;
-				float endv = (mapTopRight.v + ((y - topRight.y) * rightVGradient));// * t.height;
+				float startv = (mapTopLeft.v + ((y - topLeft.y) * leftVGradient));
+				float endv = (mapTopRight.v + ((y - topRight.y) * rightVGradient));
 
 				float startLight_W = (topLeftLight_W + ((y - topLeft.y) * leftLightGradient_W));
 				float endLight_W = (topRightLight_W + ((y - topRight.y) * rightLightGradient_W));
 
 				// ***
-				colour startLight = new colour(), endLight = new colour();
+				Colour startLight = new Colour(), endLight = new Colour();
 
 				startLight.red = (topLeftLight.red + ((y - topLeft.y) * leftLightGradient.red));
 				startLight.green = (topLeftLight.green + ((y - topLeft.y) * leftLightGradient.green));
@@ -354,10 +304,9 @@ public class polygon
 					endLight.blue = ftempx;
 					// ***
 				}
-
 			
-				int startxint = startx;//Math.round(startx);
-				int endxint = endx;//Math.round(endx);
+				int startxint = startx;
+				int endxint = endx;
 				
 				int lengthint = endxint - startxint;
 
@@ -372,43 +321,28 @@ public class polygon
 				float lightLength = endLight_W - startLight_W;
 				float lightInterval = lightLength / length;
 
-				colour lightLengthC = new colour(endLight.red - startLight.red, endLight.green - startLight.green, endLight.blue - startLight.blue);
-				colour lightIntervalC = new colour(lightLengthC.red / length, lightLengthC.green / length, lightLengthC.blue / length);
+				Colour lightLengthC = new Colour(endLight.red - startLight.red, endLight.green - startLight.green, endLight.blue - startLight.blue);
+				Colour lightIntervalC = new Colour(lightLengthC.red / length, lightLengthC.green / length, lightLengthC.blue / length);
 				
 				if (lengthint >= 1)
 				{
-					int tempstartx = startx;//Math.round(startx);
+					int tempstartx = startx;
 					float uoffset = startu;
 					float voffset = startv;
 					lightOffset = startLight_W;
 
-					colour lightOffsetC = new colour(startLight.red,startLight.green,startLight.blue);
+					Colour lightOffsetC = new Colour(startLight.red,startLight.green,startLight.blue);
 
 					for (int i = 0; i < lengthint; i++)
 					{
-						// *** Texture picker
-						/*
-						texture _current = _textures[0];
-						float tInterval = 1.0f / (float)_textures.length;
-						float _c = 0.0f;
-						for (int w = 0; w < _textures.length; w++)
-						{
-							if ((lightOffset > _c) && (lightOffset <= _c + tInterval))
-							{
-								_current = _textures[w];
-							}
-							_c += tInterval;
-						}
-						 colour c = _current.get(uoffset, voffset);
-						 */
-						colour c = new colour(0.0f, 0.0f, 0.0f);
+						Colour c = new Colour(0.0f, 0.0f, 0.0f);
 						int idx = (int)(lightOffset * 100.0f);
 						if (idx < 0) idx = 0;
 						if (idx >= 100) idx = 99;
 
 						for (int w = 0; w < _textures.length; w++)
 						{
-							colour tc = _textures[w].get(uoffset, voffset);
+							Colour tc = _textures[w].get(uoffset, voffset);
 							tc.red *= ((lightOffsetC.red - 1.0f) * -1.0f);
 							tc.green *= ((lightOffsetC.green - 1.0f) * -1.0f);
 							tc.blue *= ((lightOffsetC.blue - 1.0f) * -1.0f);
@@ -420,30 +354,7 @@ public class polygon
 							c.blue += tc.blue * value;
 						}
 
-						/*
-						c.red = (c.red + lightOffsetC.red) / 2.0f;
-						c.green = (c.green + lightOffsetC.green) / 2.0f;
-						c.blue = (c.blue + lightOffsetC.blue) / 2.0f;
-						 */
-						//c.red *= lightOffsetC.red;
-						//c.green *= lightOffsetC.green;
-						//c.blue *= lightOffsetC.blue;
-
-						//System.out.println("r,g,b " + c.red + "," + c.green + "," + c.blue);
-						// ***
-						//colour c = _texture.get(startu + ((float)(i) * uInterval), startv + ((float)(i) * vInterval));
-						//colour c = _current.get(uoffset, voffset);//_texture.get(uoffset, voffset);
-
-						/*
-						c.red = 255.0f;
-						c.green = 255.0f;
-						c.blue = 255.0f;
-						*/
-						//float _l = (float)(i) * lightInterval;
-						//System.out.println(lightOffset);
 						pb.pixel((int)(c.red), (int)(c.green), (int)(c.blue), tempstartx + i, yInt);
-						//pb.pixel((int)(c.red * lightOffset), (int)(c.green * lightOffset), (int)(c.blue * lightOffset), tempstartx + i, yInt);
-
 
 						uoffset += uInterval; voffset += vInterval;
 						lightOffset += lightInterval;

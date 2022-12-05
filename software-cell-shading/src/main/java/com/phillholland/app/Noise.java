@@ -1,9 +1,11 @@
-public class noise
+package com.phillholland.app;
+
+public class Noise
 {
 	public int octaves = 8;
 	public float persistance = 1.0f;
 
-	public noise()
+	public Noise()
 	{
 
 	}
@@ -22,12 +24,9 @@ public class noise
 		float time3 = time2 * currentPosition;
 
 		float a = 2.0f * time3 - 3.0f * time2 + 1.0f;
-		//float b = time3 - (2.0f * time2) + currentPosition;
-		//float c = time3 - time2;
 		float d = -2.0f * time3 + 3.0f * time2;
 
 		return a * current + d * next; // can be extended to 3D interpolation :-)
-		//return = a * current + b * 0.0 + c * 0.0 + d * next;				
 	}
 
 	private float fnoise(int x, int y)
@@ -123,7 +122,7 @@ public class noise
 		return result;
 	}
 
-	public void draw(pixelBuffer16 pb)
+	public void draw(PixelBuffer16 pb)
 	{
 		float xoffset = 0.0f;
 		float yoffset = 0.0f;

@@ -1,9 +1,10 @@
+package com.phillholland.app;
 
-public class sine
+public class Sine
 {
 	float buffer[];
 
-	public sine()
+	public Sine()
 	{
 		buffer = new float[629];
 

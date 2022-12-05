@@ -1,9 +1,10 @@
+package com.phillholland.app;
 
-public class cosine
+public class Cosine
 {
 	float buffer[];
 
-	public cosine()
+	public Cosine()
 	{
 		buffer = new float[629];
 
