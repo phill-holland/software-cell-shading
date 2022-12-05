@@ -42,7 +42,13 @@ java -cp target/software-cell-shading-1.0-SNAPSHOT.jar com.phillholland.app.App
 This application demonstrates the following;
 
 <ul>
-<li>Maven Building</li>
+<li>Software 3D Graphics</li>
+<li>Software Texturing and Rasterisation</li>
+<li>Perlin Noise</li>
+<li>Cell Shading</li>
+<li>3D Camera</li>
+<li>Basic 3D Lighting Calculations</li>
+<li>3D Mathematics, including matrices and vectors</li>
 </ul>
 
 Note!
