@@ -8,8 +8,10 @@ It is a resurrection of an old Java Applet codebase!
 
 Prerequisites;
 
-JDK Installed (Java)
-Apache Maven Installed
+<ul>
+<li>JDK Installed (Java)</li>
+<li>Apache Maven Installed</li>
+</ul>
 
 Ubuntu installation instructions for both;
 
