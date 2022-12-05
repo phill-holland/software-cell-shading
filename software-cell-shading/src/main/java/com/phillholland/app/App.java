@@ -17,11 +17,11 @@ public class App
       
         Main main = new Main();
             
-        main.setSize(1024, 1024);
+        main.setSize(512, 512);
         f.add(main);
         f.pack();
         main.init();
-        f.setSize(1024,1024 + 60);
+        f.setSize(512,512 + 60);
         f.setVisible(true);        
     }
 }

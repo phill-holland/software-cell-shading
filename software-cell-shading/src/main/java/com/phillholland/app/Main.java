@@ -9,7 +9,7 @@ public class Main extends Panel implements Runnable
 	private boolean running = true;
 	private PixelBuffer16 pb = null;
 
-	private int width = 1024, height = 1024;
+	private int width = 512, height = 512;
 	
 	private Image backBuffer = null;
 	private Graphics backGraphics = null;
@@ -88,7 +88,7 @@ public class Main extends Panel implements Runnable
 		float tonalMap[][] = map(_textures.length);
 		// ***
 
-		c = new Camera(1024, 1024);
+		c = new Camera(512, 512);
 		c.set(new Point(0.0f, 0.0f, -3.0f), new Vector(0.0f, 0.0f, 0.0f), 0.0f);
 		c.calculate();
 
